@@ -1181,6 +1181,11 @@
       </a>
 
       <div class="nav-section-label">Kalkulator & Finansial</div>
+      <a class="nav-item" id="nav-item-target-dividen" onclick="openTargetDividenModal()" style="cursor:pointer;" title="Atur Target Dividen Pasif">
+        <span class="nav-icon">🎯</span>
+        <span>Target Dividen</span>
+        <span style="margin-left:auto; font-size:0.68rem; background:rgba(16,185,129,0.18); color:#34d399; padding:1px 6px; border-radius:10px; font-weight:700;">Atur</span>
+      </a>
       <a class="nav-item" data-target="pajak">
         <span class="nav-icon">🧾</span>
         <span>Laporan Pajak</span>
@@ -1277,6 +1282,9 @@
           <span class="status-indicator-dot" style="background:#3b82f6; color:#3b82f6;"></span>
           <span id="save-status-indicator">Tersimpan</span>
         </div>
+        <button onclick="openTargetDividenModal()" class="btn btn-secondary btn-sm" style="border-color:rgba(16,185,129,0.4); color:#34d399;" title="Atur Target Dividen Pasif">
+          🎯 Target Dividen
+        </button>
         <button id="refresh-all-prices-btn" class="btn btn-secondary btn-sm" title="Refresh Harga Yahoo Finance">
           🔄 Refresh
         </button>
@@ -1304,10 +1312,10 @@
           </p>
           <div style="margin-top:12px; max-width:380px;">
             <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:3px;">
-              <span>Target Bulanan (<strong id="hero-target-mo-val">Rp 5.000.000</strong>)</span>
+              <span>Target Bulanan (<strong id="hero-target-mo-val" style="cursor:pointer; color:#34d399; text-decoration:underline dashed;" onclick="openTargetDividenModal()" title="Klik untuk ubah target dividen">Rp 5.000.000 ✏️</strong>)</span>
               <span id="hero-target-pct">0% tercapai</span>
             </div>
-            <div class="progress-bar-container">
+            <div class="progress-bar-container" style="cursor:pointer;" onclick="openTargetDividenModal()" title="Klik untuk ubah target dividen">
               <div id="hero-target-progress-fill" class="progress-bar-fill" style="width:0%;"></div>
             </div>
             <div style="font-size:0.72rem; color:var(--text-dim);" id="hero-target-gap">
@@ -1499,25 +1507,30 @@
       <!-- TAB CONTENT: DIKELOLA AI -->
       <div id="fm-content-ai">
 
-        <!-- 1. Ringkasan Dana & Target Pendapatan Pasif Rp 20 jt/bulan -->
+        <!-- 1. Ringkasan Dana & Target Pendapatan Pasif -->
         <div class="glass-card" style="margin-bottom:16px;">
-          <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:12px;">
-            Ringkasan dana · target pendapatan pasif <strong style="color:var(--text-main);">Rp 20 jt/bulan</strong>
-            <span style="color:var(--text-dim); margin-left:6px;">dividen bersih pajak · <span id="fm-analyzed-count">52</span> saham dinilai fund manager AI</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+            <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em;">
+              Ringkasan dana · target pendapatan pasif <strong style="color:var(--text-main);" id="fm-target-text-label">Rp 5 jt/bulan</strong>
+              <span style="color:var(--text-dim); margin-left:6px;">dividen bersih pajak · <span id="fm-analyzed-count">52</span> saham dinilai fund manager AI</span>
+            </div>
+            <button onclick="openTargetDividenModal()" class="btn btn-secondary btn-sm" style="border-color:rgba(16,185,129,0.4); color:#34d399; font-size:0.75rem; padding:4px 10px;" title="Ubah target dividen">
+              🎯 Ubah Target
+            </button>
           </div>
 
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:16px;">
             <div>
               <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase;">SEKARANG (REGULER)</div>
-              <div style="font-size:1.55rem; font-weight:800; color:var(--text-main);" id="fm-cur-monthly">Rp 9.210.950<span style="font-size:0.85rem; font-weight:400; color:var(--text-muted);">/bln</span></div>
+              <div style="font-size:1.55rem; font-weight:800; color:var(--text-main);" id="fm-cur-monthly">Rp 0<span style="font-size:0.85rem; font-weight:400; color:var(--text-muted);">/bln</span></div>
               <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;" id="fm-cur-desc">
-                <span style="color:#10b981; font-weight:600;">46%</span> dari target · 12 bln terakhir Rp 10,1 jt termasuk dividen spesial
+                <span style="color:#10b981; font-weight:600;">0%</span> dari target
               </div>
             </div>
 
-            <div>
-              <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase;">TARGET</div>
-              <div style="font-size:1.55rem; font-weight:800; color:var(--text-main);">Rp 20 jt<span style="font-size:0.85rem; font-weight:400; color:var(--text-muted);">/bln</span></div>
+            <div style="cursor:pointer;" onclick="openTargetDividenModal()" title="Klik untuk ubah target dividen">
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase;">TARGET <span style="font-size:0.7rem; color:#34d399;">✏️</span></div>
+              <div style="font-size:1.55rem; font-weight:800; color:var(--text-main);" id="fm-target-display-val">Rp 5 jt<span style="font-size:0.85rem; font-weight:400; color:var(--text-muted);">/bln</span></div>
               <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">pendapatan pasif bersih pajak</div>
             </div>
 
@@ -2431,8 +2444,36 @@ service cloud.firestore {
           <div id="firebase-status-detail" style="margin-top:12px; font-size:0.78rem; color:var(--text-muted); padding:8px 12px; background:#0a1628; border-radius:6px; display:none;"></div>
         </div>
 
-        <!-- Gemini API Key & Data Backup -->
+        <!-- Gemini API Key & Data Backup & Target Dividen -->
         <div style="display: flex; flex-direction: column; gap: 20px;">
+          <!-- Card: Target Dividen Pasif -->
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3>🎯 Target Dividen Pasif (Goal)</h3>
+                <p class="card-subtitle">Atur target dividen bulanan &amp; tahunan untuk kebebasan finansial</p>
+              </div>
+            </div>
+            <form id="settings-target-form" style="display:flex; flex-direction:column; gap:12px;">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">Target Bulanan (Rp/bln)</label>
+                  <input type="number" id="settings-target-monthly" class="form-control" placeholder="5000000" min="500000" step="500000" required>
+                  <div id="settings-target-mo-preview" style="font-size:0.72rem; color:#34d399; margin-top:4px; font-weight:600;">Rp 5.000.000 / bln</div>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">Target Tahunan (Rp/thn)</label>
+                  <input type="number" id="settings-target-annual" class="form-control" placeholder="60000000" min="6000000" step="6000000" required>
+                  <div id="settings-target-yr-preview" style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">Rp 60.000.000 / thn</div>
+                </div>
+              </div>
+              <div style="display:flex; gap:8px; margin-top:4px; flex-wrap:wrap;">
+                <button type="submit" class="btn btn-primary btn-sm">💾 Simpan Target</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="openTargetDividenModal()" style="border-color:rgba(16,185,129,0.4); color:#34d399;">🎯 Kalkulator &amp; Roadmap Lengkap</button>
+              </div>
+            </form>
+          </div>
+
           <div class="glass-card">
             <div class="card-header">
               <div>
@@ -2966,6 +3007,84 @@ service cloud.firestore {
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" onclick="closeAllModals()">Batal</button>
         <button type="submit" class="btn btn-primary">Simpan Pantauan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: UPDATE TARGET DIVIDEN -->
+<div id="modal-target-dividen" class="modal-backdrop">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:1.3rem;">🎯</span>
+        <div>
+          <h3 style="margin:0;">Atur Target Dividen Pasif</h3>
+          <p class="card-subtitle" style="margin:0;">Tentukan target dividen bulanan untuk mencapai kebebasan finansial</p>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeAllModals()">&times;</button>
+    </div>
+    <form id="modal-target-form">
+      <div class="modal-body" style="gap:16px;">
+        <!-- Status Portofolio Saat Ini -->
+        <div style="background:#0b1523; border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:12px 14px; display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; text-align:center;">
+          <div>
+            <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase;">Dividen Sekarang</div>
+            <div id="modal-target-cur-monthly" style="font-size:1.05rem; font-weight:700; color:#34d399; margin-top:2px;">Rp 0/bln</div>
+          </div>
+          <div>
+            <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase;">Yield on Cost</div>
+            <div id="modal-target-cur-yoc" style="font-size:1.05rem; font-weight:700; color:#60a5fa; margin-top:2px;">0.00%</div>
+          </div>
+          <div>
+            <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase;">Modal Terinvestasi</div>
+            <div id="modal-target-cur-invested" style="font-size:1.05rem; font-weight:700; color:var(--text-main); margin-top:2px;">Rp 0</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Target Dividen Bulanan (Rp/bulan) *</label>
+            <input type="number" id="target-monthly-input" class="form-control" placeholder="5000000" min="500000" step="500000" required>
+            <div id="target-monthly-preview-text" style="font-size:0.74rem; color:#34d399; margin-top:4px; font-weight:600;">Rp 5.000.000 / bulan</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Dividen Tahunan (Rp/tahun) *</label>
+            <input type="number" id="target-annual-input" class="form-control" placeholder="60000000" min="6000000" step="6000000" required>
+            <div id="target-annual-preview-text" style="font-size:0.74rem; color:var(--text-muted); margin-top:4px;">Rp 60.000.000 / tahun</div>
+          </div>
+        </div>
+
+        <!-- Quick Presets -->
+        <div>
+          <label class="form-label" style="margin-bottom:6px;">Pilihan Cepat Target Bulanan:</label>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="applyTargetPreset(3000000)">Rp 3 Jt</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="applyTargetPreset(5000000)">Rp 5 Jt</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="applyTargetPreset(10000000)">Rp 10 Jt</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="applyTargetPreset(20000000)">Rp 20 Jt</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="applyTargetPreset(50000000)">Rp 50 Jt</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Gap & Capital Estimate Calculation Box -->
+        <div id="modal-target-calc-box" style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.2); border-radius:8px; padding:12px 14px; font-size:0.8rem; line-height:1.6;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-weight:700; color:#34d399;">📊 Analisis Pencapaian:</span>
+            <span id="modal-target-pct-badge" class="badge-pill profit">0% Tercapai</span>
+          </div>
+          <div style="color:var(--text-secondary);" id="modal-target-gap-text">
+            Kurang Rp 0 / bulan untuk mencapai target.
+          </div>
+          <div style="color:var(--text-muted); font-size:0.75rem; margin-top:4px; border-top:1px dashed rgba(255,255,255,0.08); padding-top:6px;" id="modal-target-capital-needed-text">
+            Estimasi total portofolio yang dibutuhkan: <strong>Rp 0</strong> (dengan asumsi YoC saat ini).
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeAllModals()">Batal</button>
+        <button type="submit" class="btn btn-primary">💾 Simpan Target Dividen</button>
       </div>
     </form>
   </div>
@@ -3643,13 +3762,21 @@ function renderRingkasan() {
   document.getElementById('hero-yoc-val').textContent = sum.overallYoC.toFixed(2) + '%';
 
   const targetMo = AppState.settings.targetMonthlyDividend || 5000000;
-  document.getElementById('hero-target-mo-val').textContent = formatRupiah(targetMo);
-  const targetPct = Math.min(Math.round((sum.monthlyAverage / targetMo) * 100), 100);
+  const targetMoEl = document.getElementById('hero-target-mo-val');
+  if (targetMoEl) targetMoEl.innerHTML = `${formatRupiah(targetMo)} <span style="font-size:0.75rem;">✏️</span>`;
+  const targetPct = targetMo > 0 ? Math.min(Math.round((sum.monthlyAverage / targetMo) * 100), 100) : 0;
   document.getElementById('hero-target-pct').textContent = `${targetPct}% tercapai`;
   document.getElementById('hero-target-progress-fill').style.width = `${targetPct}%`;
 
   const gap = Math.max(0, targetMo - sum.monthlyAverage);
-  document.getElementById('hero-target-gap').textContent = `Kurang ${formatRupiah(gap)} / bln untuk mencapai target kebebasan finansial.`;
+  const gapEl = document.getElementById('hero-target-gap');
+  if (gapEl) {
+    if (gap <= 0) {
+      gapEl.innerHTML = `<span style="color:#10b981; font-weight:600;">🎉 Target tercapai! (${formatRupiah(sum.monthlyAverage)} / bln)</span>`;
+    } else {
+      gapEl.textContent = `Kurang ${formatRupiah(gap)} / bln untuk mencapai target kebebasan finansial.`;
+    }
+  }
 
   // Main KPI
   document.getElementById('dash-total-invested').textContent = formatRupiah(sum.totalInvested);
@@ -4610,6 +4737,26 @@ function getFinancialReportForTicker(ticker, fallbackStockObj = null) {
 
 function renderFundManager() {
   const sum = PortfolioLogic.getSummary();
+  const targetMo = AppState.settings.targetMonthlyDividend || 5000000;
+  const targetPct = targetMo > 0 ? Math.min(Math.round((sum.monthlyAverage / targetMo) * 100), 100) : 0;
+
+  const fmCurMonthly = document.getElementById('fm-cur-monthly');
+  if (fmCurMonthly) fmCurMonthly.innerHTML = `${formatRupiah(sum.monthlyAverage)}<span style="font-size:0.85rem; font-weight:400; color:var(--text-muted);">/bln</span>`;
+
+  const fmCurDesc = document.getElementById('fm-cur-desc');
+  if (fmCurDesc) fmCurDesc.innerHTML = `<span style="color:#10b981; font-weight:600;">${targetPct}%</span> dari target · Proyeksi tahunan ${formatRupiah(sum.totalAnnualProjected)}`;
+
+  const fmTargetDisplay = document.getElementById('fm-target-display-val');
+  if (fmTargetDisplay) fmTargetDisplay.innerHTML = `${formatRupiah(targetMo)}<span style="font-size:0.85rem; font-weight:400; color:var(--text-muted);">/bln</span>`;
+
+  const fmTargetLabel = document.getElementById('fm-target-text-label');
+  if (fmTargetLabel) fmTargetLabel.textContent = `${formatRupiah(targetMo)}/bulan`;
+
+  const fmCurYoc = document.getElementById('fm-cur-yoc');
+  if (fmCurYoc) fmCurYoc.textContent = `${sum.overallYoC.toFixed(2)}%`;
+
+  const fmProgressFill = document.getElementById('fm-progress-fill');
+  if (fmProgressFill) fmProgressFill.style.width = `${targetPct}%`;
 
   // 1. Update Tabel Manual
   const tbody = document.getElementById('fm-manual-stocks-table');
@@ -5921,6 +6068,99 @@ async function deleteWatchlistEntry(id) {
   showToast(`Saham ${name} dihapus dari pantauan`, 'info');
 }
 
+/* ── TARGET DIVIDEN UTILITIES ── */
+function openTargetDividenModal() {
+  const sum = PortfolioLogic.getSummary();
+  const targetMo = AppState.settings.targetMonthlyDividend || 5000000;
+  const targetYr = AppState.settings.targetAnnualDividend || (targetMo * 12);
+
+  const curMoEl = document.getElementById('modal-target-cur-monthly');
+  if (curMoEl) curMoEl.textContent = `${formatRupiah(sum.monthlyAverage)}/bln`;
+
+  const curYocEl = document.getElementById('modal-target-cur-yoc');
+  if (curYocEl) curYocEl.textContent = `${sum.overallYoC.toFixed(2)}%`;
+
+  const curInvEl = document.getElementById('modal-target-cur-invested');
+  if (curInvEl) curInvEl.textContent = formatRupiah(sum.totalInvested);
+
+  const moInput = document.getElementById('target-monthly-input');
+  if (moInput) moInput.value = targetMo;
+
+  const yrInput = document.getElementById('target-annual-input');
+  if (yrInput) yrInput.value = targetYr;
+
+  updateTargetModalCalculations();
+  openModal('modal-target-dividen');
+}
+
+function applyTargetPreset(monthlyAmount) {
+  const moInput = document.getElementById('target-monthly-input');
+  const yrInput = document.getElementById('target-annual-input');
+  if (moInput) moInput.value = monthlyAmount;
+  if (yrInput) yrInput.value = monthlyAmount * 12;
+  updateTargetModalCalculations();
+}
+
+function updateTargetModalCalculations() {
+  const moInput = document.getElementById('target-monthly-input');
+  const yrInput = document.getElementById('target-annual-input');
+  const moVal = Number(moInput?.value) || 0;
+  const yrVal = Number(yrInput?.value) || 0;
+
+  const moPrev = document.getElementById('target-monthly-preview-text');
+  if (moPrev) moPrev.textContent = `${formatRupiah(moVal)} / bulan`;
+
+  const yrPrev = document.getElementById('target-annual-preview-text');
+  if (yrPrev) yrPrev.textContent = `${formatRupiah(yrVal)} / tahun`;
+
+  const sum = PortfolioLogic.getSummary();
+  const pct = moVal > 0 ? Math.min(Math.round((sum.monthlyAverage / moVal) * 100), 100) : 0;
+  const gap = Math.max(0, moVal - sum.monthlyAverage);
+
+  const badge = document.getElementById('modal-target-pct-badge');
+  if (badge) {
+    badge.textContent = `${pct}% Tercapai`;
+    badge.className = `badge-pill ${pct >= 100 ? 'profit' : pct >= 50 ? 'syariah' : 'neutral'}`;
+  }
+
+  const gapEl = document.getElementById('modal-target-gap-text');
+  if (gapEl) {
+    if (gap <= 0) {
+      gapEl.innerHTML = `<span style="color:#10b981; font-weight:700;">🎉 Selamat! Target dividen bulanan Anda telah tercapai!</span>`;
+    } else {
+      gapEl.innerHTML = `Kurang <strong>${formatRupiah(gap)}</strong> / bulan (${formatRupiah(gap * 12)} / tahun) untuk mencapai target.`;
+    }
+  }
+
+  const yoc = sum.overallYoC > 0 ? (sum.overallYoC / 100) : 0.08;
+  const totalCapitalNeeded = yoc > 0 ? Math.round(yrVal / yoc) : 0;
+  const capitalGap = Math.max(0, totalCapitalNeeded - sum.totalInvested);
+
+  const capEl = document.getElementById('modal-target-capital-needed-text');
+  if (capEl) {
+    capEl.innerHTML = `Estimasi total portofolio yang dibutuhkan: <strong>${formatRupiah(totalCapitalNeeded)}</strong> (asumsi yield ${(yoc * 100).toFixed(1)}%).<br>Kekurangan modal saat ini: <strong>${formatRupiah(capitalGap)}</strong>.`;
+  }
+}
+
+async function saveTargetDividend(monthly, annual) {
+  const m = Number(monthly) || 5000000;
+  const y = Number(annual) || (m * 12);
+
+  AppState.settings.targetMonthlyDividend = m;
+  AppState.settings.targetAnnualDividend = y;
+
+  if (FirebaseService.isConnected()) {
+    await FirebaseService.saveSettings(AppState.settings);
+  } else {
+    saveDataLocal();
+  }
+
+  renderAllViews();
+  renderSettings();
+  closeAllModals();
+  showToast(`🎯 Target dividen berhasil disimpan: ${formatRupiah(m)}/bulan`, 'success');
+}
+
 /* ==================== EXPORT UTILITIES ==================== */
 function exportPortfolioToCSV() {
   let csv = 'Kode,Nama,Lot,Lembar,Harga Beli,Harga Pasar,Invested,Equity,Floating PL,PL Pct,DPS,Yield TTM,YoC\n';
@@ -6577,6 +6817,18 @@ function renderSettings() {
     }
   }
 
+  // Target Dividen Settings
+  const stMo = document.getElementById('settings-target-monthly');
+  const stYr = document.getElementById('settings-target-annual');
+  const targetMo = AppState.settings.targetMonthlyDividend || 5000000;
+  const targetYr = AppState.settings.targetAnnualDividend || (targetMo * 12);
+  if (stMo) stMo.value = targetMo;
+  if (stYr) stYr.value = targetYr;
+  const stMoPrev = document.getElementById('settings-target-mo-preview');
+  if (stMoPrev) stMoPrev.textContent = `${formatRupiah(targetMo)} / bln`;
+  const stYrPrev = document.getElementById('settings-target-yr-preview');
+  if (stYrPrev) stYrPrev.textContent = `${formatRupiah(targetYr)} / thn`;
+
   // Isi form Firebase jika ada di localStorage atau dari DEFAULT_FIREBASE_CONFIG
   const savedFb = localStorage.getItem('panen_firebase_config');
   let fbConfig = null;
@@ -6905,6 +7157,60 @@ document.addEventListener('DOMContentLoaded', async () => {
     PriceService.fetchPrice(ticker).then(() => {
       renderWatchlist();
     });
+  });
+
+  // Target Dividen Form Submissions
+  document.getElementById('modal-target-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const mo = Number(document.getElementById('target-monthly-input')?.value);
+    const yr = Number(document.getElementById('target-annual-input')?.value);
+    await saveTargetDividend(mo, yr);
+  });
+
+  document.getElementById('settings-target-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const mo = Number(document.getElementById('settings-target-monthly')?.value);
+    const yr = Number(document.getElementById('settings-target-annual')?.value);
+    await saveTargetDividend(mo, yr);
+  });
+
+  // Target Input Auto-Sync (Modal: Monthly <-> Annual)
+  const tMoInput = document.getElementById('target-monthly-input');
+  const tYrInput = document.getElementById('target-annual-input');
+
+  tMoInput?.addEventListener('input', (e) => {
+    const val = Number(e.target.value) || 0;
+    if (tYrInput) tYrInput.value = val * 12;
+    updateTargetModalCalculations();
+  });
+
+  tYrInput?.addEventListener('input', (e) => {
+    const val = Number(e.target.value) || 0;
+    if (tMoInput) tMoInput.value = Math.round(val / 12);
+    updateTargetModalCalculations();
+  });
+
+  // Settings Target Input Auto-Sync (Settings: Monthly <-> Annual)
+  const sMoInput = document.getElementById('settings-target-monthly');
+  const sYrInput = document.getElementById('settings-target-annual');
+
+  sMoInput?.addEventListener('input', (e) => {
+    const val = Number(e.target.value) || 0;
+    if (sYrInput) sYrInput.value = val * 12;
+    const prev = document.getElementById('settings-target-mo-preview');
+    if (prev) prev.textContent = `${formatRupiah(val)} / bln`;
+    const yrPrev = document.getElementById('settings-target-yr-preview');
+    if (yrPrev) yrPrev.textContent = `${formatRupiah(val * 12)} / thn`;
+  });
+
+  sYrInput?.addEventListener('input', (e) => {
+    const val = Number(e.target.value) || 0;
+    const mo = Math.round(val / 12);
+    if (sMoInput) sMoInput.value = mo;
+    const prev = document.getElementById('settings-target-mo-preview');
+    if (prev) prev.textContent = `${formatRupiah(mo)} / bln`;
+    const yrPrev = document.getElementById('settings-target-yr-preview');
+    if (yrPrev) yrPrev.textContent = `${formatRupiah(val)} / thn`;
   });
 
   // AI Chat
