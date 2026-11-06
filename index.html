@@ -2918,6 +2918,59 @@ service cloud.firestore {
   </div>
 </div>
 
+<!-- MODAL: TAMBAH WATCHLIST -->
+<div id="modal-watchlist" class="modal-backdrop">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3>Tambah Saham Pantauan (Watchlist)</h3>
+      <button class="modal-close" onclick="closeAllModals()">&times;</button>
+    </div>
+    <form id="watchlist-form">
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Kode Saham (Ticker) *</label>
+            <input type="text" id="watchlist-ticker" class="form-control" placeholder="Contoh: BBCA" style="text-transform:uppercase;" required maxlength="6">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nama Perusahaan</label>
+            <input type="text" id="watchlist-name" class="form-control" placeholder="Bank Central Asia Tbk">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Target Harga Entry (Rp) *</label>
+            <input type="number" id="watchlist-target-price" class="form-control" placeholder="9500" min="1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Est. Dividen (DPS Rp/lembar)</label>
+            <input type="number" id="watchlist-dps" class="form-control" placeholder="270" min="0" step="0.1">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Kategori Syariah</label>
+            <select id="watchlist-syariah" class="form-control">
+              <option value="false" selected>Konvensional</option>
+              <option value="true">🕌 Syariah (ISSI / JII)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catatan / Alasan Pantau</label>
+            <input type="text" id="watchlist-notes" class="form-control" placeholder="Tunggu koreksi sebelum dividen interim...">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeAllModals()">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Pantauan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Toast Container -->
 <div id="toast-container"></div>
 
@@ -3929,6 +3982,11 @@ function renderWatchlist() {
   const tbody = document.getElementById('watchlist-table-body');
   if (!tbody) return;
 
+  if (!AppState.watchlist || AppState.watchlist.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:32px; color:var(--text-muted);">Belum ada saham pantauan. Klik <strong>+ Tambah Pantauan</strong> di kanan atas untuk memantau saham incaran.</td></tr>`;
+    return;
+  }
+
   tbody.innerHTML = AppState.watchlist.map(w => {
     const cur = w.currentPrice || 0;
     const dps = w.dps || 0;
@@ -3950,8 +4008,9 @@ function renderWatchlist() {
         <td>${formatRupiah(w.targetPrice)}</td>
         <td><span class="badge-pill ${mos >= 0 ? 'profit' : 'loss'}">${mos >= 0 ? '+' : ''}${mos.toFixed(1)}%</span></td>
         <td><span class="badge-pill ${w.isSyariah ? 'syariah' : 'neutral'}">${w.isSyariah ? '🕌 Syariah' : 'Konvensional'}</span></td>
-        <td style="text-align:right;">
-          <button class="btn btn-primary btn-sm" onclick="convertWatchlistToPortfolio('${w.ticker}')">Beli</button>
+        <td style="text-align:right; white-space:nowrap;">
+          <button class="btn btn-primary btn-sm" onclick="convertWatchlistToPortfolio('${w.ticker}')" title="Beli & masukkan ke portofolio">Beli</button>
+          <button class="btn btn-sm" onclick="deleteWatchlistEntry('${w.id}')" title="Hapus dari pantauan" style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); margin-left:6px; padding:4px 8px; cursor:pointer;">🗑️</button>
         </td>
       </tr>
     `;
@@ -5851,6 +5910,17 @@ function convertWatchlistToPortfolio(ticker) {
   document.getElementById('stock-buy-price').value = p;
 }
 
+async function deleteWatchlistEntry(id) {
+  const item = AppState.watchlist.find(w => w.id === id);
+  const name = item ? item.ticker : 'saham ini';
+  if (!confirm(`Hapus ${name} dari daftar pantauan?`)) return;
+  AppState.watchlist = AppState.watchlist.filter(w => w.id !== id);
+  await deleteData('watchlist', id);
+  if (!FirebaseService.isConnected()) saveDataLocal();
+  renderWatchlist();
+  showToast(`Saham ${name} dihapus dari pantauan`, 'info');
+}
+
 /* ==================== EXPORT UTILITIES ==================== */
 function exportPortfolioToCSV() {
   let csv = 'Kode,Nama,Lot,Lembar,Harga Beli,Harga Pasar,Invested,Equity,Floating PL,PL Pct,DPS,Yield TTM,YoC\n';
@@ -6702,6 +6772,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     openModal('modal-journal');
   });
 
+  document.getElementById('open-add-watchlist-btn')?.addEventListener('click', () => {
+    openModal('modal-watchlist');
+  });
+
   // Global Search
   document.getElementById('global-search-input')?.addEventListener('input', (e) => {
     const q = e.target.value.trim().toUpperCase();
@@ -6787,6 +6861,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     await saveData('journals', newJournal);
     if (!FirebaseService.isConnected()) renderJurnal();
     showToast('Jurnal investasi berhasil disimpan', 'success');
+  });
+
+  document.getElementById('watchlist-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const ticker = document.getElementById('watchlist-ticker').value.trim().toUpperCase();
+    const name = document.getElementById('watchlist-name').value.trim() || ticker;
+    const targetPrice = Number(document.getElementById('watchlist-target-price').value) || 0;
+    const dps = Number(document.getElementById('watchlist-dps').value) || 0;
+    const isSyariah = document.getElementById('watchlist-syariah').value === 'true';
+    const notes = document.getElementById('watchlist-notes').value.trim() || 'Pantauan dividen';
+
+    if (!ticker) {
+      showToast('Masukkan kode emiten', 'warning');
+      return;
+    }
+
+    const cached = AppState.pricesCache[ticker];
+    const currentPrice = cached ? cached.currentPrice : targetPrice;
+    const changePercent = cached ? cached.changePercent : 0;
+
+    const newWl = {
+      id: 'wl_' + Date.now(),
+      ticker,
+      name,
+      targetPrice,
+      currentPrice,
+      dps,
+      changePercent,
+      isSyariah,
+      notes
+    };
+
+    AppState.watchlist.push(newWl);
+    closeAllModals();
+    e.target.reset();
+    await saveData('watchlist', newWl);
+    if (!FirebaseService.isConnected()) saveDataLocal();
+    renderWatchlist();
+    showToast(`⭐ ${ticker} berhasil ditambahkan ke pantauan`, 'success');
+
+    // Tarik harga live BEI secara asynchronous
+    PriceService.fetchPrice(ticker).then(() => {
+      renderWatchlist();
+    });
   });
 
   // AI Chat
